@@ -1,0 +1,27 @@
+clear certs(power shell)
+
+ 
+
+#Prompts the user to enter their Last Name to be used to check against their PIV certificates
+
+While($confirm -notin @('y', 'Y', 'Yes', 'YES','yes'))
+
+{
+
+#Prompts the user to enter their surname
+
+Write-Host "Please enter your Last Name (as written in your PIV certificate)" -ForegroundColor Yellow
+
+$name  = (Read-Host "Last Name" ).ToUpper()
+
+Write-Host "You typed $name, is this correct?" -ForegroundColor DarkYellow
+
+$confirm = (Read-Host "[Y/N]")
+
+}
+
+ 
+
+#List all certificates in the store and remove any that do not match the name entered
+
+Get-ChildItem cert:\CurrentUser\my | Where-Object {$_.Subject -NotLike "*$name*" } | Remove-Item
